@@ -33,7 +33,6 @@ ESSENTIAL_PACKAGES=(
   helix           # Modal text editor
   fastfetch       # System info fetch
   yazi            # TUI file manager
-  tree            # Directory tree viewer
   fd              # Simpler 'find'
   ripgrep         # Fast search
   zoxide          # Smart 'cd'
