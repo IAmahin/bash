@@ -27,6 +27,7 @@ echo "
 
 #───────────────📥 Install CLI packages
 ESSENTIAL_PACKAGES=(
+  duf             # Disk Space
   bat             # Better 'cat'
   gvfs            # Virtual filesystem support
   helix           # Modal text editor
@@ -56,23 +57,6 @@ if [[ "$INSTALL_GUI" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 else
   echo "❌ Skipping GUI editor install."
 fi
-
-#───────────────📂 Dotfiles install
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-for FILE in .bashrc .inputrc; do
-  if [[ -f "$SCRIPT_DIR/$FILE" ]]; then
-    if [[ -f "$HOME/$FILE" ]]; then
-      echo "📁 Backing up existing $FILE to ${FILE}_bak"
-      mv "$HOME/$FILE" "$HOME/${FILE}_bak"
-    fi
-    echo "📥 Installing new $FILE"
-    cp "$SCRIPT_DIR/$FILE" "$HOME/$FILE"
-  else
-    echo "⚠️ $FILE not found in script directory. Skipping..."
-  fi
-done
-
 #───────────────🔁 Reload .bashrc
 if [[ -f "$HOME/.bashrc" ]]; then
   echo "🔄 Reloading your .bashrc..."
