@@ -1,23 +1,15 @@
-#──────────────🔄 BASH TAB SUGGESTION 💡──────────────#
+#──────────────🔄 CASE SENSITIVITY 💡──────────────#
 
-TAB: menu-complete
 set completion-ignore-case on
 
-#─────────────⚙️ EXTRA TAB FUNCTIONS 🧩─────────────#
+#─────────────⚙️ VIRTICAL TAB SUGGESTION 🧩─────────────#
 
-set show-all-if-ambiguous on
-set show-all-if-unmodified on
-set menu-complete-display-prefix on
-"/t": menu-complete
-"\e[Z": menu-complete-backward
+set completion-display-width 0
+
+#──────────────🔄 History SCORLING 💡──────────────#
 "\e[A": history-search-backward
 "\e[B": history-search-forward
-"\eOA": history-search-backward
-"\eOB": history-search-forward
+set show-all-if-ambiguous on
 
-#──────────────🎨 TAB COLOR COMPLETION 🌈──────────────#
-set colored-stats on
-set visible-stats on
-set mark-symlinked-directories on
 
 
