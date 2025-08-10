@@ -49,13 +49,13 @@ alias iii='sudo rm config.h && sudo make clean install'
 
 #───────────────✨ EXTRA ALIAS ⚡─────────────────────────────#
 
-alias info='fastfetch'
 alias go='yazi'
 alias gc='git clone'
 alias n='helix $HOME/.config/note/note.txt'
 alias linutil='curl -fsSL https://christitus.com/linux | sh'
 alias f='fd --exec rg --color=always'  
-alias tree='tree -CAhF --dirsfirst'
+alias fzf='fzf --preview "bat --style=numbers --color=always {}" --bind "enter:execute(helix {})"'
+
 
 #────────────────────🚀 ZOXIDE 🚀────────────────────────────#
 
@@ -63,29 +63,56 @@ eval "$(zoxide init --cmd cd bash)"
 
 #─────────────────────🗃️ EZA 🗃️──────────────────────────────#
 
-alias ls="eza -a --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+alias ls='eza -a --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions'
+alias lst='eza --tree --level=2 --icons=always --color=always '
+alias tree='eza --tree --all --icons=always --color=always '
 
 #───────────────🧠 BASH COMPLETION 🧩─────────────────────────#
 
 if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
+  . /etc/bash_completion
 fi
 
+#───────────────🎨 TAB COMPLETION AND COLOR 🌈────────────────────#
+
+# TAB COMPLEATION AND SCROLING
 bind 'set show-all-if-ambiguous on'
-bind 'set menu-complete-display-prefix on'
+bind '"\t":menu-complete'
 
-#───────────────🎨 TAB COLOR COMPLETION 🌈────────────────────#
-
-bind "set colored-completion-prefix on"
-bind "set show-all-if-ambiguous on"
-bind "set completion-ignore-case on"
-
+#COLORS
+export CLICOLOR=1
 export LS_COLORS=$LS_COLORS:'di=1;34:'
+bind 'set colored-completion-prefix on'
 eval "$(dircolors -b)"
+bind 'set colored-stats on'
 
 #──────────────────────💻 PS1 PROMPT 💻────────────────────────#
 
-PS1='\[\e[1;32m\]\u\[\e[38;5;208m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[38;5;139m\])\[\e[0m\] \[\e[0;34m\]󰥔 \@\[\e[0m\] \[\e[38;5;139m\])\[\e[0m\] \[\e[38;5;178m\]\w\[\e[38;5;178m\] \[\e[0m\] \[\e[38;5;139m\] )\[\e[0m\] \n\[\e[38;5;208m\]\[\e[0m\] '
+get_dir_icon() {
+    # If no write permission (likely root/system dir)
+    if [ ! -w "$PWD" ]; then
+        echo ""
+        return
+    fi
+
+    case "$PWD" in
+        "$HOME") echo "" ;;
+        "$HOME/.config") echo "" ;;
+        "$HOME/Documents") echo "" ;;
+        "$HOME/Desktop") echo "" ;;
+        "$HOME/Downloads") echo "" ;;
+        *) echo "" ;;
+    esac
+}
+
+PS1='\[\e[1;32m\]\u\[\e[38;5;208m\]@\[\e[1;32m\]\h\[\e[0m\] \
+\[\e[38;5;139m\]⏽\[\e[0m\] \
+\[\e[0;34m\]󰥔 \@\[\e[0m\] \
+\[\e[38;5;139m\]⏽\[\e[0m\] \
+\[\e[38;5;178m\]\w $(get_dir_icon)\[\e[0m\] \
+\[\e[38;5;139m\] ⏽\[\e[0m\] \
+\n\[\e[38;5;208m\]\[\e[0m\] '
+
 
 # ──────────────🔥 FZF History Picker on Ctrl+Up Arrow ────────────── #
 
@@ -145,6 +172,25 @@ uzp() {
     fi
   done
 }
+
+#───────────────────🕓 Copy With Status 📦──────────────────────────────#
+cpp() {
+  set -e
+  strace -q -ewrite cp -- "${1}" "${2}" 2>&1 |
+  awk '{
+    count += $NF
+    if (count % 10 == 0) {
+      percent = count / total_size * 100
+      printf "%3d%% [", percent
+      for (i=0; i<=percent; i++) printf "="
+      printf ">"
+      for (i=percent; i<100; i++) printf " "
+      printf "]\r"
+    }
+  }
+  END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
+}
+
 # ──────────────🔥 FZF History Picker on Ctrl+Up Arrow ────────────── #
 
 HISTTIMEFORMAT="%F %T   "
@@ -154,6 +200,7 @@ shopt -s histappend
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 export FZF_DEFAULT_OPTS='
+  --exact --border=bold --border=rounded
   --color=fg:#ebdbb2,bg:#282828,hl:#fabd2f
   --color=fg+:#ffffff,bg+:#3c3836,hl+:#fe8019
   --color=info:#83a598,prompt:#b8bb26,pointer:#d3869b
@@ -163,4 +210,3 @@ export FZF_DEFAULT_OPTS='
 #──────────────────────────────────────────────────────────────────────#
 
 
-source /home/i/.config/broot/launcher/bash/br
