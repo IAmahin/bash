@@ -1,0 +1,22 @@
+installed packages
+
+pamixer
+feh
+fastfetch
+helix
+gedit
+thunar
+alacritty
+thorium
+flameshot
+rofi
+jetbrains mono nerd font
+gvfs
+thunar-archiever-plugin
+xarchiever
+xf86-video-fbdev
+
+
+
+its updated
+
